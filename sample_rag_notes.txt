@@ -1,0 +1,12 @@
+Retrieval-Augmented Generation, or RAG, improves a chatbot by adding an external knowledge step before generation.
+The system first loads documents, splits them into chunks, and stores those chunks in a searchable index.
+When a user asks a question, the retriever finds chunks that are similar to the question.
+The chatbot then sends the user's question plus the retrieved chunks to the language model.
+This makes the answer more grounded in the uploaded material and reduces hallucination.
+
+In a classroom demo, RAG is useful because students can see the difference between model memory and document-grounded answering.
+The retrieval step is separate from the generation step.
+Chunk size and overlap affect retrieval quality.
+Small chunks are precise but may miss context.
+Large chunks contain more context but may add irrelevant text.
+
