@@ -4,7 +4,6 @@ One GUI for a master's-level lecture demo:
 
 - Lab 1: OpenAI API through LangChain, plus Hugging Face Inference API.
 - Lab 2: Local LLM chatbot through Ollama.
-- Lab 3: Retrieval-Augmented Generation over uploaded documents.
 - Setup Check: package, key, and Ollama diagnostics.
 
 ## 1. Setup
@@ -59,8 +58,7 @@ The app defaults to an installed Ollama model when it can detect one. Use `Refre
 3. Click `Preview payload` to show message roles, history, temperature, max tokens, and model name.
 4. Switch to `Hugging Face Inference API` and run the same prompt to compare providers.
 5. Open `Lab 2: Local LLM with Ollama`, refresh models, and ask the same prompt again.
-6. Open `Lab 3: RAG`, upload a short document, build the index, ask a question, and inspect the retrieved chunks.
-7. Discuss the tradeoff: cloud models are easy and powerful; local models improve privacy and offline control but require local resources.
+6. Discuss the tradeoff: cloud models are easy and powerful; local models improve privacy and offline control but require local resources.
 
 ## 5. Student Concepts To Highlight
 
@@ -70,7 +68,6 @@ The app defaults to an installed Ollama model when it can detect one. Use `Refre
 - Max tokens caps the output length.
 - LangChain standardizes model calls but each provider still has its own setup, auth, and runtime behavior.
 - Ollama exposes a local HTTP API, so the app talks to a model running on the same machine.
-- RAG adds an external knowledge step: load documents, chunk them, retrieve relevant chunks, and give those chunks to the LLM as context.
 
 ## 6. Troubleshooting
 
