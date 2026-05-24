@@ -1,0 +1,17 @@
+Retrieval-Augmented Generation, or RAG, is a pattern for grounding language model answers in external documents.
+The pipeline has two major phases: indexing and querying.
+During indexing, documents are loaded, split into chunks, embedded as vectors, and stored in a vector database.
+During querying, the user question is embedded, similar chunks are retrieved, and the language model receives both the question and the retrieved context.
+
+Chunking strategy affects answer quality.
+Small chunks can be precise but may lose surrounding context.
+Large chunks preserve context but may include irrelevant information.
+Sentence-window chunking is useful when documents contain short factual statements.
+Paragraph packing is useful when paragraphs are well structured.
+Recursive separators try to preserve natural boundaries before falling back to smaller chunks.
+
+Embedding models convert text into numeric vectors.
+Keyword vectors such as TF-IDF are easy to explain and fast for demos.
+Neural embeddings from OpenAI, Ollama, or Hugging Face capture semantic similarity beyond exact word overlap.
+Vector databases such as Qdrant store vectors and perform nearest-neighbor search efficiently.
+

@@ -1,0 +1,4 @@
+-r requirements.txt
+pypdf>=5.0.0
+qdrant-client>=1.10.0
+
