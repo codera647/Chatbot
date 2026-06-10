@@ -43,6 +43,12 @@ CSS = """
 """
 
 
+def clean_text(value, default: str = "") -> str:
+    if value is None:
+        return default
+    return str(value).strip()
+
+
 def find_free_port(start: int = 7860, end: int = 7899) -> int:
     requested = os.getenv("GRADIO_SERVER_PORT")
     if requested:
@@ -71,13 +77,13 @@ def append_turn(
     history = history or []
     settings = ChatSettings(
         provider=provider,
-        model=model.strip(),
-        system_prompt=system_prompt.strip() or DEFAULT_SYSTEM_PROMPT,
+        model=clean_text(model),
+        system_prompt=clean_text(system_prompt) or DEFAULT_SYSTEM_PROMPT,
         temperature=float(temperature),
         max_tokens=int(max_tokens),
-        openai_api_key=openai_key.strip(),
-        hf_token=hf_token.strip(),
-        ollama_base_url=ollama_base_url.strip() or OLLAMA_DEFAULT_URL,
+        openai_api_key=clean_text(openai_key),
+        hf_token=clean_text(hf_token),
+        ollama_base_url=clean_text(ollama_base_url) or OLLAMA_DEFAULT_URL,
     )
     answer = chat(settings, message, history)
     next_history = history + [
@@ -115,13 +121,13 @@ def preview_payload(
 ):
     settings = ChatSettings(
         provider=provider,
-        model=model.strip(),
-        system_prompt=system_prompt.strip() or DEFAULT_SYSTEM_PROMPT,
+        model=clean_text(model),
+        system_prompt=clean_text(system_prompt) or DEFAULT_SYSTEM_PROMPT,
         temperature=float(temperature),
         max_tokens=int(max_tokens),
-        openai_api_key=openai_key.strip(),
-        hf_token=hf_token.strip(),
-        ollama_base_url=ollama_base_url.strip() or OLLAMA_DEFAULT_URL,
+        openai_api_key=clean_text(openai_key),
+        hf_token=clean_text(hf_token),
+        ollama_base_url=clean_text(ollama_base_url) or OLLAMA_DEFAULT_URL,
     )
     return payload_preview(settings, history, message)
 

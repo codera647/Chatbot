@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib.metadata
 import json
 import os
+import shutil
+import subprocess
 from dataclasses import dataclass
 from typing import Any
 
@@ -81,9 +83,68 @@ def health_report() -> str:
             "OLLAMA_BASE_URL": env_value("OLLAMA_BASE_URL", "http://localhost:11434"),
         },
         "packages": package_status(),
+        "gpu": gpu_status(),
         "ollama": ollama_status(env_value("OLLAMA_BASE_URL", "http://localhost:11434")),
+        "ollama_runtime": ollama_runtime_status(),
     }
     return json.dumps(report, indent=2)
+
+
+def gpu_status() -> dict[str, Any]:
+    nvidia_smi = shutil.which("nvidia-smi")
+    if not nvidia_smi:
+        return {
+            "nvidia_smi_available": False,
+            "message": "nvidia-smi was not found in PATH. Ollama may still run, but this app cannot confirm NVIDIA GPU availability.",
+        }
+
+    try:
+        result = subprocess.run(
+            [
+                nvidia_smi,
+                "--query-gpu=name,memory.total,driver_version",
+                "--format=csv,noheader",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+        gpus = []
+        for line in result.stdout.splitlines():
+            parts = [part.strip() for part in line.split(",")]
+            if len(parts) >= 3:
+                gpus.append(
+                    {
+                        "name": parts[0],
+                        "memory_total": parts[1],
+                        "driver_version": parts[2],
+                    }
+                )
+        return {"nvidia_smi_available": True, "gpus": gpus}
+    except Exception as exc:
+        return {"nvidia_smi_available": True, "error": str(exc)}
+
+
+def ollama_runtime_status() -> dict[str, Any]:
+    ollama = shutil.which("ollama")
+    if not ollama:
+        return {"ollama_cli_available": False}
+
+    try:
+        result = subprocess.run(
+            [ollama, "ps"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+        return {
+            "ollama_cli_available": True,
+            "loaded_models": result.stdout.strip() or "No model currently loaded.",
+        }
+    except Exception as exc:
+        return {"ollama_cli_available": True, "error": str(exc)}
 
 
 def ollama_status(base_url: str) -> dict[str, Any]:
@@ -144,6 +205,7 @@ def chat(settings: ChatSettings, user_message: str, history: list[dict[str, str]
         return ollama_chat(settings, user_message, history)
     raise ValueError(f"Unknown provider: {settings.provider}")
 
+# chating functionality
 
 def openai_chat(settings: ChatSettings, user_message: str, history: list[dict[str, str]] | None) -> str:
     api_key = settings.openai_api_key.strip() or env_value("OPENAI_API_KEY")

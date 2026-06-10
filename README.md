@@ -51,6 +51,24 @@ ollama serve
 If `ollama serve` says the address is already in use, Ollama is already running.
 The app defaults to an installed Ollama model when it can detect one. Use `Refresh Ollama models` in the local lab if you pull a new model while the app is open.
 
+### GPU use with Ollama
+
+Ollama decides whether to use GPU at the server level. The Gradio app only sends requests to `http://localhost:11434`; it does not manually move a model to GPU.
+
+Check whether an NVIDIA GPU is visible:
+
+```powershell
+nvidia-smi
+```
+
+Check which Ollama models are currently loaded:
+
+```powershell
+ollama ps
+```
+
+If a supported GPU and drivers are installed, Ollama normally uses GPU automatically for compatible models. If `nvidia-smi` is not found, install/update the GPU driver or add it to PATH, then restart Ollama.
+
 ## 4. Lecture Flow
 
 1. Start in `Setup Check` to show that keys, packages, and Ollama are separate moving parts.
@@ -58,7 +76,8 @@ The app defaults to an installed Ollama model when it can detect one. Use `Refre
 3. Click `Preview payload` to show message roles, history, temperature, max tokens, and model name.
 4. Switch to `Hugging Face Inference API` and run the same prompt to compare providers.
 5. Open `Lab 2: Local LLM with Ollama`, refresh models, and ask the same prompt again.
-6. Discuss the tradeoff: cloud models are easy and powerful; local models improve privacy and offline control but require local resources.
+6. Return to `Setup Check` and show GPU/Ollama runtime status.
+7. Discuss the tradeoff: cloud models are easy and powerful; local models improve privacy and offline control but require local resources.
 
 ## 5. Student Concepts To Highlight
 
@@ -68,6 +87,7 @@ The app defaults to an installed Ollama model when it can detect one. Use `Refre
 - Max tokens caps the output length.
 - LangChain standardizes model calls but each provider still has its own setup, auth, and runtime behavior.
 - Ollama exposes a local HTTP API, so the app talks to a model running on the same machine.
+- GPU acceleration for Ollama happens inside the Ollama server, not inside the chatbot UI code.
 
 ## 6. Troubleshooting
 
